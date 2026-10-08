@@ -191,13 +191,12 @@ section.panel{display:flex;flex-direction:column;gap:18px}
 .confetti i{position:absolute;top:-10px;width:7px;height:11px;border-radius:2px;animation:fall 1.8s ease-in forwards}
 @keyframes fall{to{transform:translate(var(--dx),420px) rotate(var(--rot));opacity:0}}
 @keyframes celIn{from{transform:scale(.8);opacity:0}}
-.presets{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
-.presets .btn[aria-pressed="true"]{background:var(--spruce);color:var(--spruce-ink);border-color:var(--spruce)}
+.hours{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
+.hours .field{flex:0 1 160px}
+.hours input:disabled,.hours .btn:disabled{opacity:.55;cursor:not-allowed}
 .lockbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
 .lockbar span{color:var(--muted);font-size:.88rem}
 .warn{border:1px solid var(--danger);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:10px}
-.presets .btn:disabled{opacity:.55;cursor:not-allowed}
-.presets .btn[aria-pressed="true"]:disabled{opacity:1}
 .pace{background:var(--bg);border-radius:8px;padding:10px 12px}
 .empty{padding:14px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
@@ -302,20 +301,18 @@ section.panel{display:flex;flex-direction:column;gap:18px}
   <section class="panel" id="panel-settings" hidden>
     <div class="card stack">
       <h2>How much time can you give it?</h2>
-      <p class="muted">Pick how much time you can give it in a typical week, spread over whichever days suit you: every evening, weekdays only, or just weekends. The mountain is sized so it feels the same at any pace. You'll see how your actual weekly plan compares on the Climb tab.</p>
-      <div class="presets" id="presets">
-        <button class="btn" data-daily="30">2.5 hours a week</button>
-        <button class="btn" data-daily="60">5 hours a week</button>
-        <button class="btn" data-daily="120">10 hours a week</button>
-        <button class="btn" data-daily="240">20 hours a week</button>
-      </div>
+      <p class="muted">Enter how many hours you can give it in a typical week, spread over whichever days suit you: every evening, weekdays only, or just weekends. The mountain is sized so it feels the same at any pace. You'll see how your actual weekly plan compares on the Climb tab.</p>
+      <form class="hours" id="hoursForm">
+        <label class="field"><span class="label">Hours a week</span><input id="weekHours" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5"></label>
+        <button class="btn primary" type="submit" id="hoursSet">Set pace</button>
+      </form>
       <p class="pace" id="paceText"></p>
       <details class="planedit" id="fineTune">
         <summary>Fine-tune the numbers</summary>
         <div class="fields">
           <label class="field"><span class="label">Steps to the summit</span><input id="setSteps" type="number" min="5" max="200"></label>
           <label class="field"><span class="label">Checkpoint every</span><input id="setCp" type="number" min="1" max="50"></label>
-          <label class="field"><span class="label">Minutes per level</span><input id="setMpl" type="number" min="10" step="10"></label>
+          <label class="field"><span class="label">Minutes per level</span><input id="setMpl" type="number" min="10" step="5"></label>
         </div>
       </details>
       <div class="lockbar" id="lockBar">
@@ -744,7 +741,7 @@ function setCheckpointEvery(cp){
   state.rewards = moved; state.goal.checkpointEvery = cp;
 }
 function applyPreset(daily){
-  setCheckpointEvery(10); state.daily = daily; state.minutesPerLevel = daily * 2; state.goal.steps = 50;
+  setCheckpointEvery(10); state.daily = daily; state.minutesPerLevel = Math.max(10, Math.round(daily * 2 / 5) * 5); state.goal.steps = 50;
 }
 const plannedWeek = () => state.schedule.reduce((a, d) => a + d.reduce((b, x) => b + (x.demo ? 0 : Number(x.minutes || 0)), 0), 0);
 const dailyGoal = () => state.daily || state.minutesPerLevel / 2;
@@ -772,12 +769,12 @@ function planPaceText(){
 const paceLocked = () => state.paceLocked !== false;
 function renderSettings(){
   const locked = paceLocked();
-  document.querySelectorAll('#presets [data-daily]').forEach(b => b.disabled = locked);
+  $('weekHours').disabled = locked; $('hoursSet').disabled = locked;
   ['setSteps','setCp','setMpl'].forEach(id => $(id).disabled = locked);
   $('lockMsg').textContent = locked ? 'Locked so your progress stays put.' : 'Pick a pace. Settings lock again once you choose one.';
   $('lockBtn').textContent = locked ? 'Change pace settings' : 'Lock settings';
   $('lockBtn').hidden = locked ? !$('unlockWarn').hidden : false;
-  document.querySelectorAll('#presets [data-daily]').forEach(b => b.setAttribute('aria-pressed', Number(b.dataset.daily) * 2 === state.minutesPerLevel && state.goal.steps === 50 && state.goal.checkpointEvery === 10));
+  if (document.activeElement !== $('weekHours')) $('weekHours').value = String(Math.round(dailyGoal() * 5 / 6) / 10).replace(/\.0$/, '');
   $('paceText').textContent = paceText();
   const set = (id, v) => { const el = document.getElementById(id); if (document.activeElement !== el) el.value = v; };
   set('setTitle', state.goal.title); set('setSteps', state.goal.steps); set('setCp', state.goal.checkpointEvery); set('setMpl', state.minutesPerLevel);
@@ -814,9 +811,11 @@ $('lockBtn').addEventListener('click', () => {
 });
 $('unlockYes').addEventListener('click', () => { state.paceLocked = false; $('unlockWarn').hidden = true; save(); render(); });
 $('unlockNo').addEventListener('click', () => { $('unlockWarn').hidden = true; renderSettings(); });
-$('presets').addEventListener('click', e => {
-  const b = e.target.closest('[data-daily]'); if (!b || b.disabled) return;
-  applyPreset(Number(b.dataset.daily)); state.paceLocked = true; save(); render();
+$('hoursForm').addEventListener('submit', e => {
+  e.preventDefault(); if (paceLocked()) return;
+  const h = Number($('weekHours').value.trim().replace(',', '.'));
+  if (!(h >= 0.5 && h <= 100)){ toast('Enter your weekly hours as a number between 0.5 and 100, like 5 or 17.5.'); return; }
+  $('weekHours').blur(); applyPreset(h * 60 / 5); state.paceLocked = true; save(); render();
   toast('Pace set and locked. Your levels now take ' + fmtH(state.minutesPerLevel) + ' each.');
 });
 function openGuide(){ $('guide1').hidden = false; $('guide2').hidden = true; $('guide').hidden = false; $('guide').querySelector('.cel').scrollTop = 0; }
