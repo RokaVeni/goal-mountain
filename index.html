@@ -292,6 +292,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
     <div class="stack">
       <h2>Checkpoint rewards</h2>
       <p class="muted">You earn these when you reach the big checkpoints on the mountain. Decide now how you'll treat yourself at each one. No rewards are provided, that part is on you.</p>
+      <p class="muted small">You hit a checkpoint every <span id="cpEveryNote">10</span> steps. Want rewards more or less often? Change <em>Checkpoint every</em> under <em>Fine-tune the numbers</em> in Settings.</p>
       <div class="checkpoints" id="checkpoints"></div>
     </div>
     <h2>Reward ideas</h2>
@@ -313,6 +314,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
       <p class="pace" id="paceText"></p>
       <details class="planedit" id="fineTune">
         <summary>Fine-tune the numbers</summary>
+        <p class="muted small">Set your own numbers instead: how many minutes a level takes, how often you reach a checkpoint (and a reward), and how many steps it is to the summit.</p>
         <div class="fields">
           <label class="field"><span class="label">Steps to the summit</span><input id="setSteps" type="number" min="5" max="200"></label>
           <label class="field"><span class="label">Checkpoint every</span><input id="setCp" type="number" min="1" max="50"></label>
@@ -391,12 +393,12 @@ section.panel{display:flex;flex-direction:column;gap:18px}
     <div id="guide2" hidden>
       <h2>How to use this tracker</h2>
       <ol>
-        <li><strong>Pick your pace</strong> in Settings: how many hours a week you can give your goal, on whichever days suit you (weekdays, evenings, only weekends). The mountain is sized to match, so it feels about the same whether you have 2.5 or 20 hours a week. The mountain rewards consistency, not bursts of effort that aren't sustainable. Your pace then locks, so you don't accidentally reshuffle your progress.</li>
+        <li><strong>Pick your pace</strong> in Settings: how many hours a week you can give your goal, on whichever days suit you (weekdays, evenings, only weekends). The mountain is sized to match, so it feels about the same whether you have 2.5 or 20 hours a week. The mountain rewards consistency, not bursts of effort that aren't sustainable. Your pace then locks, so you don't accidentally reshuffle your progress. Want different numbers? Under <em>Fine-tune the numbers</em> in Settings you can set exactly how long a level takes, how often you hit a checkpoint and how many steps the summit is.</li>
         <li><strong>Name your goal and add your categories</strong>: the areas you want to work on (for a language, maybe listening, speaking, reading, writing and grammar). You don't need 5 categories, you can have more or less, do whatever works for you.</li>
         <li><strong>Plan your week</strong> on the Climb tab: pick a day and add what you want to do, like "Grammar, 30 min, textbook". The plan repeats every week, and a line under it shows roughly how fast you'll climb at that pace.</li>
         <li><strong>Tick things off</strong> as you do them. The minutes go straight into that category's level tracker ring.</li>
         <li><strong>Level up.</strong> When a ring fills, that category levels up and your hiker climbs one step up the mountain.</li>
-        <li><strong>Reach checkpoints.</strong> Every 10 steps (about once a month at your planned pace) you hit a checkpoint and get reminded to reward yourself. You can write down how you'll reward yourself in advance in the Rewards tab, but you can also leave it empty and decide when you get there. You can also keep track of reward ideas in the Rewards tab.</li>
+        <li><strong>Reach checkpoints.</strong> Every 10 steps (about once a month at your planned pace) you hit a checkpoint and get reminded to reward yourself. You can write down how you'll reward yourself in advance in the Rewards tab, but you can also leave it empty and decide when you get there. You can also keep track of reward ideas in the Rewards tab. Want rewards more or less often? Change <em>Checkpoint every</em> under <em>Fine-tune the numbers</em> in Settings.</li>
         <li><strong>Log extra time</strong> in Log when you did something that wasn't on the plan.</li>
         <li><strong>Reach the summit.</strong> You get a choice: extend this mountain with more steps and keep climbing with your current levels, or start a brand-new mountain for your next goal (you can keep your categories and weekly plan). Finished goals are kept in a Summits reached list in Settings.</li>
       </ol>
@@ -807,7 +809,7 @@ function render(skipSettings){
   document.getElementById('summitBanner').hidden = stepsClimbed() < state.goal.steps;
   document.querySelectorAll('#tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === tab));
   document.querySelectorAll('section.panel').forEach(p => p.hidden = p.id !== 'panel-' + tab);
-  renderMountain(); renderCheckpoints(); renderLevels(); renderSchedule(); renderLog(); renderSummits(); if (!skipSettings) renderSettings();
+  renderMountain(); renderCheckpoints(); $('cpEveryNote').textContent = state.goal.checkpointEvery; renderLevels(); renderSchedule(); renderLog(); renderSummits(); if (!skipSettings) renderSettings();
   const s = document.getElementById('ideasSmall'), b = document.getElementById('ideasBig');
   if (document.activeElement !== s) s.value = state.ideasSmall || '';
   if (document.activeElement !== b) b.value = state.ideasBig || '';

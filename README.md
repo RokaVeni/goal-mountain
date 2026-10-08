@@ -19,12 +19,12 @@ My original system is fully manual: I colour in progress bars by hand and keep t
 
 ## How it works
 
-1. **Pick your pace** in *Settings*: how many hours a week you can give your goal, on whichever days suit you (weekdays, evenings, only weekends). The mountain is sized to match, so it feels about the same whether you have 2.5 or 20 hours a week. The mountain rewards consistency, not bursts of effort that aren't sustainable. Your pace then locks, so you don't accidentally reshuffle your progress.
+1. **Pick your pace** in *Settings*: how many hours a week you can give your goal, on whichever days suit you (weekdays, evenings, only weekends). The mountain is sized to match, so it feels about the same whether you have 2.5 or 20 hours a week. The mountain rewards consistency, not bursts of effort that aren't sustainable. Your pace then locks, so you don't accidentally reshuffle your progress. Want different numbers? Under *Fine-tune the numbers* in Settings you can set exactly how long a level takes, how often you hit a checkpoint and how many steps the summit is.
 2. **Name your goal and add your categories**: the areas you want to work on (for a language, maybe listening, speaking, reading, writing and grammar). You don't need 5 categories, you can have more or less, do whatever works for you.
 3. **Plan your week** on the *Climb* tab: pick a day and add what you want to do, like "Grammar, 30 min, textbook". The plan repeats every week, and a line under it shows roughly how fast you'll climb at that pace.
 4. **Tick things off** as you do them. The minutes go straight into that category's level tracker ring.
 5. **Level up.** When a ring fills, that category levels up and your hiker climbs one step up the mountain.
-6. **Reach checkpoints.** Every 10 steps (about once a month at your planned pace) you hit a checkpoint and get reminded to reward yourself. You can write down how you'll reward yourself in advance in the *Rewards* tab, but you can also leave it empty and decide when you get there. You can also keep track of reward ideas in the *Rewards* tab.
+6. **Reach checkpoints.** Every 10 steps (about once a month at your planned pace) you hit a checkpoint and get reminded to reward yourself. You can write down how you'll reward yourself in advance in the *Rewards* tab, but you can also leave it empty and decide when you get there. You can also keep track of reward ideas in the *Rewards* tab. Want rewards more or less often? Change *Checkpoint every* under *Fine-tune the numbers* in Settings.
 7. **Log extra time** in *Log* when you did something that wasn't on the plan.
 8. **Reach the summit.** You get a choice: extend this mountain with more steps and keep climbing with your current levels, or start a brand-new mountain for your next goal (you can keep your categories and weekly plan). Finished goals are kept in a *Summits reached* list in *Settings*.
 
