@@ -344,6 +344,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
     <svg viewBox="0 0 60 60" width="64" height="64" aria-hidden="true"><path d="M8,54 L30,14 L52,54 Z" fill="var(--rock)"/><path d="M30,14 L36.05,25 L33,23.5 L30,26 L27,23.5 L23.95,25 Z" fill="var(--snow)"/><line x1="30" y1="14" x2="30" y2="2" stroke="var(--trail)" stroke-width="1.8"/><path d="M30,2 L42,6 L30,10 Z" fill="var(--flag)"/></svg>
     <h2 id="welTitle">Welcome to Goal Mountain</h2>
     <p>Plan your week, tick things off and watch your hiker climb toward your big goal.</p>
+    <p class="small">Tip: in the example, today's list has demo sessions. Tick them to see a level-up, a checkpoint and the summit.</p>
     <p class="muted small">Everything you enter stays in this browser only.</p>
     <div class="row" style="justify-content:center">
       <button class="btn" id="welExample">Look around the example</button>
@@ -614,7 +615,16 @@ function catOptions(sel){
   return state.categories.map(c => `<option value="${c.id}" ${c.id === sel ? 'selected' : ''}>${esc(c.name)}</option>`).join('');
 }
 function doneFor(date, schedId){ return state.log.find(e => e.date === date && e.sched === schedId); }
+// Demo sessions always sit on today's list, whatever day you come back.
+function placeDemos(){
+  const t = weekday(new Date());
+  const demos = state.schedule.flatMap(d => d.filter(x => x.demo));
+  if (!demos.length || state.schedule[t].filter(x => x.demo).length === demos.length) return;
+  state.schedule = state.schedule.map(d => d.filter(x => !x.demo));
+  state.schedule[t].push(...demos);
+}
 function renderSchedule(){
+  placeDemos();
   $('goToday').hidden = iso(addDays(weekStart, selDay)) === iso(new Date());
   $('planPace').textContent = planPaceText();
   const today = iso(new Date());
