@@ -87,6 +87,12 @@ section.panel{display:flex;flex-direction:column;gap:18px}
 /* mountain */
 .mtn-wrap{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--sky1)}
 .mtn-wrap svg{display:block;width:100%;height:auto}
+.mtn-wrap{position:relative}
+.mtn-wrap .cpt{cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
+.mtn-wrap .cpt:focus-visible circle:last-of-type{stroke-width:3}
+.cptip{position:absolute;z-index:2;max-width:220px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:.85rem;line-height:1.35;box-shadow:0 6px 18px rgb(0 0 0 / .18);pointer-events:none;overflow-wrap:anywhere}
+.cptip strong{display:block;font-family:var(--display)}
+.cptip .rw{color:var(--flag);font-weight:600}
 .home-top .mtn-wrap{display:flex}
 .home-top .mtn-wrap svg{height:100%;min-height:100%}
 .checkpoints{display:grid;gap:8px}
@@ -469,7 +475,7 @@ function exampleState(){
     []
   ];
   const s = {example:true, goal:{title:'Reach B2 in a new language', steps:50, checkpointEvery:10}, minutesPerLevel:120,
-    categories:cats, schedule, log:[], rewards:{10:'New book', 20:'Dinner out with a friend', 30:'Day trip', 40:'That thing I keep eyeing', 50:'Summit: a weekend away'},
+    categories:cats, schedule, log:[], rewards:{10:'New book', 20:'Dinner out with a friend', 30:'Day trip', 40:'That thing I keep eyeing', 50:'A weekend away'},
     ideasSmall:'Fancy coffee\nAn episode of my comfort show\nLong walk with a podcast', ideasBig:'Day trip somewhere new\nConcert tickets\nA weekend away'};
   // six weeks of plausible history
   const today = new Date(); today.setHours(0,0,0,0);
@@ -600,21 +606,21 @@ function renderMountain(){
     if (isCp){
       const reached = k <= now;
       if (k === n && reached){
-        flags += `<g transform="translate(300,38)"><line x1="0" y1="0" x2="0" y2="-32" stroke="var(--trail)" stroke-width="2"/><path d="M0,-32 L20,-25 L0,-18 Z" fill="${reached ? 'var(--flag)' : 'var(--surface)'}" stroke="var(--flag)" stroke-width="1.4"/><text x="24" y="-21" font-size="11" font-family="JetBrains Mono, monospace" fill="var(--trail)">${k}</text></g>`;
+        flags += `<g class="cpt" data-k="${k}" tabindex="0" transform="translate(300,38)"><circle cy="-18" r="18" fill="transparent"/><line x1="0" y1="0" x2="0" y2="-32" stroke="var(--trail)" stroke-width="2"/><path d="M0,-32 L20,-25 L0,-18 Z" fill="${reached ? 'var(--flag)' : 'var(--surface)'}" stroke="var(--flag)" stroke-width="1.4"/><text x="24" y="-21" font-size="11" font-family="JetBrains Mono, monospace" fill="var(--trail)">${k}</text></g>`;
         return;
       }
       if (!reached){
-        flags += `<g transform="translate(${p[0].toFixed(1)},${p[1].toFixed(1)})"><circle r="6" fill="var(--surface)" stroke="var(--flag)" stroke-width="2"/><text x="0" y="-10" text-anchor="middle" font-size="10" font-family="JetBrains Mono, monospace" fill="var(--trail)">${k}</text></g>`;
+        flags += `<g class="cpt" data-k="${k}" tabindex="0" transform="translate(${p[0].toFixed(1)},${p[1].toFixed(1)})"><circle r="14" fill="transparent"/><circle r="6" fill="var(--surface)" stroke="var(--flag)" stroke-width="2"/><text x="0" y="-10" text-anchor="middle" font-size="10" font-family="JetBrains Mono, monospace" fill="var(--trail)">${k}</text></g>`;
         return;
       }
-      flags += `<g transform="translate(${p[0].toFixed(1)},${p[1].toFixed(1)})"><line x1="0" y1="0" x2="0" y2="-20" stroke="var(--trail)" stroke-width="1.6"/><path d="M0,-20 L14,-15 L0,-10 Z" fill="${reached ? 'var(--flag)' : 'var(--surface)'}" stroke="var(--flag)" stroke-width="1.2"/><text x="17" y="-11" font-size="10" font-family="JetBrains Mono, monospace" fill="var(--trail)">${k}</text></g>`;
+      flags += `<g class="cpt" data-k="${k}" tabindex="0" transform="translate(${p[0].toFixed(1)},${p[1].toFixed(1)})"><circle cy="-10" r="14" fill="transparent"/><line x1="0" y1="0" x2="0" y2="-20" stroke="var(--trail)" stroke-width="1.6"/><path d="M0,-20 L14,-15 L0,-10 Z" fill="${reached ? 'var(--flag)' : 'var(--surface)'}" stroke="var(--flag)" stroke-width="1.2"/><text x="17" y="-11" font-size="10" font-family="JetBrains Mono, monospace" fill="var(--trail)">${k}</text></g>`;
     } else {
       dots += `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.2" fill="${k <= now ? 'var(--spruce)' : 'var(--surface)'}" stroke="var(--trail)" stroke-width="1"/>`;
     }
   });
   const me = pts[now];
   document.getElementById('mountain').innerHTML = `
-  <svg viewBox="0 0 600 360" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Mountain trail: ${now} of ${n} steps climbed">
+  <svg viewBox="0 0 600 360" preserveAspectRatio="xMidYMax meet" role="group" aria-label="Mountain trail: ${now} of ${n} steps climbed">
     <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sky1)"/><stop offset="1" stop-color="var(--sky2)"/></linearGradient></defs>
     <rect width="600" height="360" fill="url(#sky)"/>
     <polygon points="0,360 120,240 200,300 260,360" fill="var(--rock2)" opacity=".55"/>
@@ -636,7 +642,7 @@ function renderMountain(){
       <circle cx="0" cy="-23.5" r="4" fill="var(--snow)"/>
       <path d="M-4.2,-24.5 Q0,-30 4.2,-24.5 Z" fill="var(--flag)"/>
     </g></g>
-  </svg>`;
+  </svg><div class="cptip" id="cpTip" role="status" hidden></div>`;
 }
 function renderCheckpoints(){
   const n = state.goal.steps, cp = state.goal.checkpointEvery, now = stepsClimbed();
@@ -843,6 +849,27 @@ $('guideClose').addEventListener('click', closeGuide);
 $('guide').addEventListener('click', e => { if (e.target.id === 'guide') closeGuide(); });
 $('startFresh').addEventListener('click', () => { state = blankState(); save(); tab = 'settings'; render(); toast('Fresh start. Pick your weekly time, name your goal and add your categories.'); });
 
+// ---- checkpoint bubble on the mountain (hover, tap or keyboard focus)
+let tipFor = null;
+function showTip(g){
+  const k = Number(g.dataset.k), n = state.goal.steps, now = stepsClimbed(), tip = $('cpTip'), wrap = $('mountain');
+  const reward = (state.rewards[k] || '').trim(), left = k - now;
+  tip.innerHTML = `<strong>${k === n ? 'Summit' : 'Checkpoint'} · step ${k}</strong>${left <= 0 ? 'Reached ✓' : `${left} step${left === 1 ? '' : 's'} to go`}<br>${reward ? `Reward: <span class="rw">${esc(reward)}</span>` : 'No reward set yet. Add one on the Rewards tab.'}`;
+  tip.hidden = false; tipFor = k;
+  const w = wrap.getBoundingClientRect(), b = g.getBoundingClientRect(), tw = tip.offsetWidth, th = tip.offsetHeight;
+  let x = b.left - w.left + b.width / 2 - tw / 2, y = b.top - w.top - th - 6;
+  if (y < 4) y = b.bottom - w.top + 6;
+  tip.style.left = Math.max(4, Math.min(w.width - tw - 4, x)) + 'px'; tip.style.top = Math.max(4, Math.min(w.height - th - 4, y)) + 'px';
+}
+function hideTip(){ const tip = $('cpTip'); if (tip) tip.hidden = true; tipFor = null; }
+$('mountain').addEventListener('mouseover', e => { const g = e.target.closest('.cpt'); if (g && lastPointer !== 'touch') showTip(g); });
+let lastPointer = 'mouse';
+document.addEventListener('pointerdown', e => { lastPointer = e.pointerType; }, true);
+$('mountain').addEventListener('mouseout', e => { const g = e.target.closest('.cpt'); if (g && lastPointer !== 'touch' && !g.contains(e.relatedTarget)) hideTip(); });
+$('mountain').addEventListener('focusin', e => { const g = e.target.closest('.cpt'); if (g) showTip(g); });
+$('mountain').addEventListener('focusout', () => { if (lastPointer !== 'touch') hideTip(); });
+document.addEventListener('click', e => { if (tipFor !== null && !e.target.closest('#mountain .cpt')) hideTip(); });
+$('mountain').addEventListener('click', e => { const g = e.target.closest('.cpt'); if (g && tipFor !== Number(g.dataset.k)) showTip(g); else if (!g) hideTip(); });
 $('checkpoints').addEventListener('input', e => { const k = e.target.dataset.cp; if (!k) return; state.rewards[k] = e.target.value; save(); });
 
 $('goToday').addEventListener('click', () => { weekStart = monday(new Date()); selDay = weekday(new Date()); render(); });
