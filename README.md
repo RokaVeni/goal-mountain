@@ -37,6 +37,39 @@ The app opens with example data so you can see how it looks and test how it work
 - Changing your pace mid-climb recalculates every level from your logged time, so your hiker may move up or down. That's why the pace settings are locked until you choose to unlock them.
 - Removing a category also removes the time logged for it.
 
+## How I used it for Finnish
+
+Learning a language takes a lot of time and sustained effort, which is the whole reason this tool exists. I've been in Finland since 2018 and did several beginner courses during my studies, but I only got serious about Finnish about 2 years ago. That's when I set up this system and took myself from somewhere between A and B level to C1 (YKI advanced level).
+
+I split my learning into 5 categories: **Grammar, Listening, Reading, Speaking and Vocabulary**. I left Writing out on purpose, because my main goal was to get comfortable speaking and understanding as fast as possible, in a way that was sustainable for me. One thing that mattered a lot was sticking to the set times: if my 20 minutes of grammar are up, I mark where I am and pick it up in the next grammar session.
+
+Some of these work for other languages too, and some are Finnish-specific.
+
+### Grammar
+- **[Suomen mestari](https://finnlectura.fi/en/products/finnish-as-a-second-language/suomen-mestari/)**: I tried a few other materials and liked these the most. I went through them chapter by chapter and have finished all 4 books.
+- **[Wordwall](https://wordwall.net)**: after Suomen mestari, I searched Wordwall for exercises on topics that needed more practice. I kept them in a Google Doc, marked each one green, yellow, orange or red by how hard it was for me, and drilled the red and orange ones until they didn't feel hard anymore.
+- **[Uusi kielemme](https://uusikielemme.fi)**: a goldmine for grammar detail. When a topic was especially hard, I took new notes from here before going back to the exercises.
+
+### Listening
+- **Easy Finnish videos and podcasts**: [Finnished](https://www.youtube.com/@finnished), [Random Finnish Lesson](https://soundcloud.com/randomfinnishlesson) and [Opi suomea!](https://open.spotify.com/show/4sGoFvQUHdo4ND6hwjKxzj).
+- **Audiobooks**: children's audiobooks and selkokieli (easy Finnish) audiobooks from the [E-library](https://www.kansalliskirjasto.fi/en/e-library) app, and paid apps like [Storytel](https://www.storytel.com/fi). After that, audiobooks of books I'd already read, and now new books and podcasts for native speakers. I especially like [Utelias mieli](https://www.helsinki.fi/fi/ajankohtaista/podcastit/podcast-utelias-mieli).
+- **[LingoClip](https://www.lingoclip.com)**: once a week I fill in song lyrics as I listen. I practise a song until I can do the whole thing with fewer than 10 mistakes, then move on.
+
+### Reading
+- I brute-forced this one a bit. I started with easy materials, got bored, and moved on to books far above my level, reading slowly, out loud and with a translator.
+- To keep it lighter, I mix regular books with translated manga, almost all from the library.
+- [Yle](https://yle.fi) news for less fictional vocabulary, and [Selkouutiset](https://yle.fi/selkouutiset) for news in easy Finnish.
+- I write down new words as I read and translate them later for my vocabulary list.
+
+### Speaking
+- A deliberate 30-minute conversation practice with my Finnish partner, using question lists we found online. Nowadays it's more relaxed because I speak a lot more Finnish in everyday life. You can also find good conversation teachers online for decent prices.
+- **[Speakly](https://www.speakly.me)**: you build sentences and record yourself saying them. In my experience the language is much more natural and useful than in something like Duolingo.
+
+### Vocabulary
+- **[Quizlet](https://quizlet.com) flashcards** (free version): I keep context on the cards. If a conjugation is hard for me, I put it in brackets next to the new word so I get used to its "shape", sometimes with several forms next to the dictionary form.
+- **Quizlet's Blast game** for lighter practice, when I want to see more words in less time.
+- **Keeping the list from growing forever**: new words go into a Google Sheet first. On Wednesdays I test myself on my existing flashcards, remove the ones I know well, refill the set from the sheet and spend the rest of the session translating new entries.
+
 ## About
 
 It's a single HTML file with its own fonts and icons, and it loads nothing from other websites. It's hosted for free on GitHub Pages. Feel free to use it, copy it or adapt it under the MIT licence (see [LICENSE](LICENSE)). It's provided as is, without any warranty.
