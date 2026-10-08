@@ -213,7 +213,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
 
   <section class="panel" id="panel-home">
     <div class="summit-banner" id="summitBanner" hidden>
-      <span>You've reached the summit of this goal. Extend the mountain or start a new goal when you're ready.</span>
+      <span>You've reached the summit of this goal, congratulations! Extend the mountain or start a new goal when you're ready.</span>
       <button class="btn small" id="summitChoose">See options</button>
     </div>
     <div class="home-top">
@@ -242,7 +242,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
         <form class="addrow" id="addItem">
           <select id="addCat" aria-label="Category"></select>
           <input id="addMin" type="number" min="5" step="5" value="30" aria-label="Minutes">
-          <input id="addLabel" class="grow" placeholder="What (optional), e.g. podcast episode" aria-label="Description">
+          <input id="addLabel" class="grow" placeholder="What (optional), e.g. podcast" aria-label="Description">
           <button class="btn primary" type="submit">Add</button>
         </form>
       </details>
@@ -270,7 +270,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
   <section class="panel" id="panel-rewards" hidden>
     <div class="stack">
       <h2>Checkpoint rewards</h2>
-      <p class="muted">You earn these when you reach the big checkpoints on the mountain. Decide now how you'll treat yourself at each one. Just so you know, no rewards are provided. That part is on you.</p>
+      <p class="muted">You earn these when you reach the big checkpoints on the mountain. Decide now how you'll treat yourself at each one. No rewards are provided, that part is on you.</p>
       <div class="checkpoints" id="checkpoints"></div>
     </div>
     <h2>Reward ideas</h2>
@@ -342,9 +342,9 @@ section.panel{display:flex;flex-direction:column;gap:18px}
 <div class="cel-back" id="welcome" hidden>
   <div class="cel" role="dialog" aria-modal="true" aria-labelledby="welTitle">
     <svg viewBox="0 0 60 60" width="64" height="64" aria-hidden="true"><path d="M8,54 L30,14 L52,54 Z" fill="var(--rock)"/><path d="M30,14 L36.05,25 L33,23.5 L30,26 L27,23.5 L23.95,25 Z" fill="var(--snow)"/><line x1="30" y1="14" x2="30" y2="2" stroke="var(--trail)" stroke-width="1.8"/><path d="M30,2 L42,6 L30,10 Z" fill="var(--flag)"/></svg>
-    <h2 id="welTitle">Welcome to Goal Mountain</h2>
+    <h2 id="welTitle">Welcome to Goal Mountain!</h2>
     <p>Plan your week, tick things off and watch your hiker climb toward your big goal.</p>
-    <p class="small">Tip: in the example, today's list has demo sessions. Tick them to see a level-up, a checkpoint and the summit.</p>
+    <p class="small">Tip: in the example, today's list has demo tick boxes. Tick them to see a level-up, a checkpoint and the summit.</p>
     <p class="muted small">Everything you enter stays in this browser only.</p>
     <div class="row" style="justify-content:center">
       <button class="btn" id="welExample">Look around the example</button>
@@ -423,7 +423,7 @@ function exampleState(){
   schedule[weekday(today)].push(
     {id:uid(), cat:S, minutes:up(mpl - (mins[S] || 0) % mpl), label:'Demo: tick me to see a level-up', demo:true},
     {id:uid(), cat:R, minutes:up((nextCp - steps) * mpl), label:'Demo: tick me to reach a checkpoint', demo:true},
-    {id:uid(), cat:W, minutes:up((s.goal.steps - steps) * mpl), label:'Demo: tick me to reach the summit', demo:true}
+    {id:uid(), cat:W, minutes:up((s.goal.steps - steps) * mpl), label:'Demo: tick me to see the summit', demo:true}
   );
   return s;
 }
