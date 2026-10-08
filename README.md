@@ -19,7 +19,7 @@ My original system is fully manual: I colour in progress bars by hand and keep t
 
 ## How it works
 
-1. **Pick your pace** in *Settings*: how much time you can give your goal on a normal working day. The mountain is sized to match, so it feels about the same whether you have 30 minutes or 4 hours a day. Your pace then locks, so you don't accidentally reshuffle your progress.
+1. **Pick your pace** in *Settings*: how many hours a week you can give your goal, on whichever days suit you (weekdays, evenings, only weekends). The mountain is sized to match, so it feels about the same whether you have 2.5 or 20 hours a week. Your pace then locks, so you don't accidentally reshuffle your progress.
 2. **Name your goal and add your categories**: the areas you want to work on (for a language, maybe listening, speaking, reading, writing and grammar).
 3. **Plan your week** on the *Climb* tab: pick a day and add what you want to do, like "Grammar, 30 min, workbook chapter". The plan repeats every week, and a line under it shows roughly how fast you'll climb at that pace.
 4. **Tick things off** as you do them. The minutes go straight into that category's ring.

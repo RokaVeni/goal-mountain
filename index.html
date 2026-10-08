@@ -284,12 +284,12 @@ section.panel{display:flex;flex-direction:column;gap:18px}
   <section class="panel" id="panel-settings" hidden>
     <div class="card stack">
       <h2>How much time can you give it?</h2>
-      <p class="muted">Pick your usual time on a working day. The mountain is sized so it feels the same at any pace. You'll see how your actual weekly plan compares on the Climb tab.</p>
+      <p class="muted">Pick how much time you can give it in a typical week, spread over whichever days suit you: every evening, weekdays only, or just weekends. The mountain is sized so it feels the same at any pace. You'll see how your actual weekly plan compares on the Climb tab.</p>
       <div class="presets" id="presets">
-        <button class="btn" data-daily="30">30 min a day</button>
-        <button class="btn" data-daily="60">1 hour a day</button>
-        <button class="btn" data-daily="120">2 hours a day</button>
-        <button class="btn" data-daily="240">4 hours a day</button>
+        <button class="btn" data-daily="30">2.5 hours a week</button>
+        <button class="btn" data-daily="60">5 hours a week</button>
+        <button class="btn" data-daily="120">10 hours a week</button>
+        <button class="btn" data-daily="240">20 hours a week</button>
       </div>
       <p class="pace" id="paceText"></p>
       <details class="planedit" id="fineTune">
@@ -670,7 +670,7 @@ function renderLog(){
 
 // ---- settings
 let armedCat = null, armedReset = false, armedPlan = null;
-// Defaults: 1 level = two working days of your daily time, a checkpoint every 10 steps (about monthly), summit at 50.
+// Presets are weekly time (stored as a fifth of it). Defaults: 1 level = 40% of your weekly time, a checkpoint every 10 steps (about monthly), summit at 50.
 // Keep checkpoint rewards in order when the spacing changes (1st reward stays on the 1st checkpoint, and so on).
 function setCheckpointEvery(cp){
   const old = state.goal.checkpointEvery;
@@ -703,11 +703,11 @@ function paceText(){
 function planPaceText(){
   const w = plannedWeek();
   if (!w) return 'Add items to your weekly plan to see how fast you\'ll climb.';
-  const p = pace(w), goal = dailyGoal() * 5;
+  const p = pace(w), goal = dailyGoal() * 5, picked = fmtH(goal);
   let t = `Your plan: ${fmtH(w)} a week. At this pace, roughly a step every ${p.step}, a checkpoint every ${p.cp}, the summit in about ${p.summit}.`;
   if (state.categories.length > 2) t += ` Each category levels up on its own, so with ${state.categories.length} categories it can feel a little slower, especially at the start.`;
-  if (w < goal * 0.75) t += ` That's less than the ${fmtH(dailyGoal())} a day you picked in Settings, so the climb will feel slower.`;
-  else if (w > goal * 1.35) t += ` That's more than the ${fmtH(dailyGoal())} a day you picked in Settings. Great if it's sustainable!`;
+  if (w < goal * 0.75) t += ` That's less than the ${picked} a week you picked in Settings, so the climb will feel slower.`;
+  else if (w > goal * 1.35) t += ` That's more than the ${picked} a week you picked in Settings. Great if it's sustainable!`;
   return t;
 }
 const paceLocked = () => state.paceLocked !== false;
