@@ -231,6 +231,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
       </div>
       <div class="row" style="justify-content:space-between">
         <h3 id="dayTitle"></h3>
+        <button class="btn small" id="goToday" hidden>Back to today</button>
         <span class="muted small"><span class="num" id="dayDone">0</span> of <span class="num" id="dayPlan">0</span> min done</span>
       </div>
       <div class="items" id="dayItems"></div>
@@ -251,7 +252,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
   <section class="panel" id="panel-log" hidden>
     <div class="card stack">
       <h2>Log extra time</h2>
-      <p class="muted">Did something that wasn't on the schedule? Add it here and it counts toward your levels.</p>
+      <p class="muted">Did something that wasn't on the schedule? Add it here and it counts toward your levels. Everything you tick off on the schedule is added to the history below automatically.</p>
       <form class="logform" id="logForm">
         <input id="logDate" type="date" aria-label="Date">
         <select id="logCat" class="cat" aria-label="Category"></select>
@@ -269,7 +270,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
   <section class="panel" id="panel-rewards" hidden>
     <div class="stack">
       <h2>Checkpoint rewards</h2>
-      <p class="muted">Every level-up is one step up the mountain. Decide now how you'll treat yourself at each checkpoint.</p>
+      <p class="muted">You earn these when you reach the big checkpoints on the mountain. Decide now how you'll treat yourself at each one. Just so you know, no rewards are provided. That part is on you.</p>
       <div class="checkpoints" id="checkpoints"></div>
     </div>
     <h2>Reward ideas</h2>
@@ -330,6 +331,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
         <label class="btn" id="loadBackupLabel" hidden>Load backup file<input type="file" id="loadBackup" accept=".json,application/json" hidden></label>
         <button class="btn" id="copyBackup">Copy backup</button>
         <button class="btn" id="restoreBackup">Restore from pasted backup</button>
+        <button class="btn" id="loadExample">Reload the example</button>
         <button class="btn danger" id="resetAll">Erase everything</button>
       </div>
       <p class="muted" id="backupMsg" aria-live="polite"></p>
@@ -339,9 +341,9 @@ section.panel{display:flex;flex-direction:column;gap:18px}
 <div class="toast" id="toast" hidden></div>
 <div class="cel-back" id="welcome" hidden>
   <div class="cel" role="dialog" aria-modal="true" aria-labelledby="welTitle">
-    <svg viewBox="0 0 60 60" width="64" height="64" aria-hidden="true"><path d="M8,54 L30,14 L52,54 Z" fill="var(--rock)"/><path d="M30,14 L36,25 L30,23 L25,27 Z" fill="var(--snow)"/><line x1="30" y1="14" x2="30" y2="2" stroke="var(--trail)" stroke-width="1.8"/><path d="M30,2 L42,6 L30,10 Z" fill="var(--flag)"/></svg>
+    <svg viewBox="0 0 60 60" width="64" height="64" aria-hidden="true"><path d="M8,54 L30,14 L52,54 Z" fill="var(--rock)"/><path d="M30,14 L36.05,25 L33,23.5 L30,26 L27,23.5 L23.95,25 Z" fill="var(--snow)"/><line x1="30" y1="14" x2="30" y2="2" stroke="var(--trail)" stroke-width="1.8"/><path d="M30,2 L42,6 L30,10 Z" fill="var(--flag)"/></svg>
     <h2 id="welTitle">Welcome to Goal Mountain</h2>
-    <p>Plan your week, tick things off and watch your hiker climb toward your big goal, with rewards along the way.</p>
+    <p>Plan your week, tick things off and watch your hiker climb toward your big goal.</p>
     <p class="muted small">Everything you enter stays in this browser only.</p>
     <div class="row" style="justify-content:center">
       <button class="btn" id="welExample">Look around the example</button>
@@ -352,7 +354,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
 <div class="cel-back" id="celebrate" hidden>
   <div class="cel" role="dialog" aria-modal="true" aria-labelledby="celTitle">
     <div class="confetti" id="confetti" aria-hidden="true"></div>
-    <svg viewBox="0 0 60 60" width="64" height="64" aria-hidden="true"><path d="M8,54 L30,14 L52,54 Z" fill="var(--rock)"/><path d="M30,14 L36,25 L30,23 L25,27 Z" fill="var(--snow)"/><line x1="30" y1="14" x2="30" y2="2" stroke="var(--trail)" stroke-width="1.8"/><path d="M30,2 L42,6 L30,10 Z" fill="var(--flag)"/></svg>
+    <svg viewBox="0 0 60 60" width="64" height="64" aria-hidden="true"><path d="M8,54 L30,14 L52,54 Z" fill="var(--rock)"/><path d="M30,14 L36.05,25 L33,23.5 L30,26 L27,23.5 L23.95,25 Z" fill="var(--snow)"/><line x1="30" y1="14" x2="30" y2="2" stroke="var(--trail)" stroke-width="1.8"/><path d="M30,2 L42,6 L30,10 Z" fill="var(--flag)"/></svg>
     <h2 id="celTitle">Checkpoint reached!</h2>
     <p class="label" id="celStep"></p>
     <p id="celLead"></p>
@@ -412,6 +414,15 @@ function exampleState(){
     const d = addDays(today, -back);
     schedule[weekday(d)].forEach((x,i) => { if ((back + i) % 5 !== 0) s.log.push({id:uid(), date:iso(d), cat:x.cat, minutes:x.minutes, note:x.label, sched:x.id}); });
   }
+  // Two demo sessions on today's list: one tops up a level, the other is big enough to reach the next checkpoint.
+  const mins = {}; s.log.forEach(l => mins[l.cat] = (mins[l.cat] || 0) + l.minutes);
+  const mpl = s.minutesPerLevel, up = m => Math.ceil(m / 10) * 10;
+  const steps = cats.reduce((a, c) => a + Math.floor((mins[c.id] || 0) / mpl), 0);
+  const nextCp = (Math.floor(steps / s.goal.checkpointEvery) + 1) * s.goal.checkpointEvery;
+  schedule[weekday(today)].push(
+    {id:uid(), cat:S, minutes:up(mpl - (mins[S] || 0) % mpl), label:'Demo: tick me to see a level-up', demo:true},
+    {id:uid(), cat:R, minutes:up((nextCp - steps) * mpl), label:'Demo: tick me to reach a checkpoint', demo:true}
+  );
   return s;
 }
 function blankState(){
@@ -483,9 +494,9 @@ function toast(msg){
   const t = document.getElementById('toast'); t.textContent = msg; t.hidden = false;
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.hidden = true, 4200);
 }
-let nudged = false;
+let nudged = false, demoTick = false;
 function withProgress(fn){
-  if (state.example && !nudged){ nudged = true; setTimeout(() => toast('Heads up: this is example data. Press Start fresh at the top to begin your own goal.'), 0); }
+  if (state.example && !nudged && !demoTick){ nudged = true; setTimeout(() => toast('Heads up: this is example data. Press Start fresh at the top to begin your own goal.'), 0); }
   const before = levels(), stepsBefore = stepsClimbed();
   fn(); save();
   const after = levels(), stepsAfter = stepsClimbed();
@@ -603,6 +614,7 @@ function catOptions(sel){
 }
 function doneFor(date, schedId){ return state.log.find(e => e.date === date && e.sched === schedId); }
 function renderSchedule(){
+  $('goToday').hidden = iso(addDays(weekStart, selDay)) === iso(new Date());
   $('planPace').textContent = planPaceText();
   const today = iso(new Date());
   const end = addDays(weekStart, 6);
@@ -664,7 +676,7 @@ function setCheckpointEvery(cp){
 function applyPreset(daily){
   setCheckpointEvery(10); state.daily = daily; state.minutesPerLevel = daily * 2; state.goal.steps = 50;
 }
-const plannedWeek = () => state.schedule.reduce((a, d) => a + d.reduce((b, x) => b + Number(x.minutes || 0), 0), 0);
+const plannedWeek = () => state.schedule.reduce((a, d) => a + d.reduce((b, x) => b + (x.demo ? 0 : Number(x.minutes || 0)), 0), 0);
 const dailyGoal = () => state.daily || state.minutesPerLevel / 2;
 function pace(weekMin){
   const perWeek = weekMin / state.minutesPerLevel;
@@ -743,6 +755,7 @@ $('startFresh').addEventListener('click', () => { state = blankState(); save(); 
 
 $('checkpoints').addEventListener('input', e => { const k = e.target.dataset.cp; if (!k) return; state.rewards[k] = e.target.value; save(); });
 
+$('goToday').addEventListener('click', () => { weekStart = monday(new Date()); selDay = weekday(new Date()); render(); });
 $('prevWeek').addEventListener('click', () => { weekStart = addDays(weekStart, -7); render(); });
 $('nextWeek').addEventListener('click', () => { weekStart = addDays(weekStart, 7); render(); });
 $('days').addEventListener('click', e => { const b = e.target.closest('[data-day]'); if (!b) return; selDay = Number(b.dataset.day); render(); });
@@ -758,6 +771,7 @@ $('dayItems').addEventListener('change', e => {
   const id = e.target.dataset.tick; if (!id) return;
   const ds = iso(addDays(weekStart, selDay)), x = state.schedule[selDay].find(i => i.id === id);
   if (ds > iso(new Date())){ e.target.checked = false; return; }
+  demoTick = !!(x && x.demo);
   withProgress(() => {
     const existing = doneFor(ds, id);
     if (existing) state.log = state.log.filter(l => l !== existing);
@@ -861,6 +875,12 @@ $('loadBackup').addEventListener('change', e => {
   const f = e.target.files[0]; if (!f) return;
   f.text().then(t => restoreFrom(t, 'file')); e.target.value = '';
 });
+let armedExample = false;
+$('loadExample').addEventListener('click', () => {
+  if (!armedExample){ armedExample = true; $('loadExample').textContent = 'Replaces your data. Click again'; $('loadExample').classList.add('armed'); return; }
+  armedExample = false; state = exampleState(); save(); tab = 'home'; weekStart = monday(new Date()); selDay = weekday(new Date()); prevSteps = stepsClimbed(); render();
+  toast('Example data loaded.');
+});
 $('resetAll').addEventListener('click', () => {
   if (!armedReset){ armedReset = true; render(); return; }
   armedReset = false; state = blankState(); save(); render(); $('backupMsg').textContent = 'Everything erased. Fresh start.';
@@ -869,6 +889,7 @@ document.addEventListener('click', e => {
   if (armedCat && !e.target.closest('[data-delcat]')){ armedCat = null; render(); }
   if (armedPlan && !e.target.closest('[data-unplan]')){ armedPlan = null; render(); }
   if (armedReset && e.target.id !== 'resetAll'){ armedReset = false; render(); }
+  if (armedExample && e.target.id !== 'loadExample'){ armedExample = false; $('loadExample').textContent = 'Reload the example'; $('loadExample').classList.remove('armed'); }
 }, true);
 
 try { const t = localStorage.getItem(KEY+'-tab'); if (t && document.querySelector(`[data-tab="${t}"]`)) tab = t; } catch(_){}

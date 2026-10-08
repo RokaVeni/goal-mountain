@@ -26,9 +26,9 @@ My original system is fully manual: I colour in progress bars by hand and keep t
 5. **Level up.** When a ring fills, that category levels up and your hiker climbs one step.
 6. **Reach checkpoints.** Every 10 steps (about once a month at your planned pace) you hit a checkpoint and get a reward. Set your rewards in advance on the *Rewards* tab.
 7. **Log extra time** in *Log* when you did something that wasn't on the plan.
-8. **Reach the summit**, then extend the mountain or start a new goal. Finished goals are kept in a list in *Settings*.
+8. **Reach the summit.** You get a choice: extend this mountain with more steps and keep climbing with your current levels, or start a brand-new mountain for your next goal (you can keep your categories and weekly plan). Finished goals are kept in a *Summits reached* list in *Settings*.
 
-The app opens with example data so you can see how it looks. Press **Start fresh** to begin with your own goal.
+The app opens with example data so you can see how it looks. Today's list includes two demo sessions you can tick to see a level-up and a checkpoint. Press **Start fresh** to begin with your own goal.
 
 ## Good to know
 
