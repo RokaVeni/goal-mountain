@@ -890,7 +890,7 @@ let armedExample = false;
 $('loadExample').addEventListener('click', () => {
   if (!armedExample){ armedExample = true; $('loadExample').textContent = 'Replaces your data. Click again'; $('loadExample').classList.add('armed'); return; }
   armedExample = false; state = exampleState(); save(); tab = 'home'; weekStart = monday(new Date()); selDay = weekday(new Date()); prevSteps = stepsClimbed(); render();
-  toast('Example data loaded.');
+  $('welcome').hidden = false;
 });
 $('resetAll').addEventListener('click', () => {
   if (!armedReset){ armedReset = true; render(); return; }
