@@ -762,7 +762,7 @@ $('presets').addEventListener('click', e => {
 });
 $('welExample').addEventListener('click', () => { $('welcome').hidden = true; save(); });
 $('welStart').addEventListener('click', () => { $('welcome').hidden = true; $('startFresh').click(); });
-$('startFresh').addEventListener('click', () => { state = blankState(); save(); tab = 'settings'; render(); toast('Fresh start. Pick your daily time, name your goal and add your categories.'); });
+$('startFresh').addEventListener('click', () => { state = blankState(); save(); tab = 'settings'; render(); toast('Fresh start. Pick your weekly time, name your goal and add your categories.'); });
 
 $('checkpoints').addEventListener('input', e => { const k = e.target.dataset.cp; if (!k) return; state.rewards[k] = e.target.value; save(); });
 
