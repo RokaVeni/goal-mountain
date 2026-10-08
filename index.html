@@ -201,6 +201,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
 .confetti i{position:absolute;top:-10px;width:7px;height:11px;border-radius:2px;animation:fall 1.8s ease-in forwards}
 @keyframes fall{to{transform:translate(var(--dx),420px) rotate(var(--rot));opacity:0}}
 @keyframes celIn{from{transform:scale(.8);opacity:0}}
+.next-step{display:flex;justify-content:flex-end}
 .hours{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
 .hours .field{flex:0 1 160px}
 .hours input:disabled,.hours .btn:disabled{opacity:.55;cursor:not-allowed}
@@ -307,6 +308,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
       <div class="card stack"><h2>Big rewards</h2><p class="muted">For checkpoints and the summit.</p><textarea id="ideasBig" placeholder="A day trip, concert tickets, that thing you've wanted for ages..."></textarea></div>
     </div>
     <p class="muted">Saved automatically.</p>
+    <div class="next-step"><button class="btn primary" type="button" data-goto="home">Next: plan your week on the Climb tab &rarr;</button></div>
   </section>
 
   <section class="panel" id="panel-settings" hidden>
@@ -344,6 +346,7 @@ section.panel{display:flex;flex-direction:column;gap:18px}
       <h2>Categories</h2>
       <div class="stack" id="catList"></div>
       <form class="row" id="addCatForm"><input id="newCat" placeholder="New category" style="flex:1"><button class="btn" type="submit">Add category</button></form>
+      <div class="next-step"><button class="btn primary" type="button" data-goto="rewards">Next: set your checkpoint rewards &rarr;</button></div>
     </div>
     <div class="card stack">
       <h2>Summits reached</h2>
@@ -823,6 +826,7 @@ function render(skipSettings){
 
 // ---- events
 const $ = id => document.getElementById(id);
+document.addEventListener('click', e => { const b = e.target.closest('[data-goto]'); if (!b) return; tab = b.dataset.goto; try { localStorage.setItem(KEY+'-tab', tab); } catch(_){} render(); window.scrollTo({top:0, behavior:'smooth'}); });
 $('tabs').addEventListener('click', e => { const b = e.target.closest('button[data-tab]'); if (!b) return; tab = b.dataset.tab; try { localStorage.setItem(KEY+'-tab', tab); } catch(_){} render(); });
 $('lockBtn').addEventListener('click', () => {
   if (paceLocked()){ $('unlockWarn').hidden = false; renderSettings(); }
