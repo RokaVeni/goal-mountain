@@ -39,4 +39,4 @@ The app opens with example data so you can see how it looks and test how it work
 
 ## About
 
-It's a single HTML file with no dependencies, hosted for free on GitHub Pages. Feel free to use it, copy it or adapt it.
+It's a single HTML file with its own fonts and icons, and it loads nothing from other websites. It's hosted for free on GitHub Pages. Feel free to use it, copy it or adapt it under the MIT licence (see [LICENSE](LICENSE)). It's provided as is, without any warranty.
