@@ -149,6 +149,10 @@ section.panel{display:flex;flex-direction:column;gap:18px}
 .item .mins{font-family:var(--mono);font-size:.9rem;white-space:nowrap}
 .addrow{display:grid;grid-template-columns:minmax(0,1.2fr) 90px minmax(0,1.6fr) auto;gap:8px}
 @media (max-width:560px){.addrow{grid-template-columns:1fr 1fr}.addrow .grow{grid-column:1/-1}}
+.item-edit{border:1px solid var(--spruce);border-radius:8px;padding:10px 12px;background:var(--surface)}
+.item-edit .addrow{grid-template-columns:minmax(0,1.2fr) 90px minmax(0,1.6fr) auto auto}
+@media (max-width:560px){.item-edit .addrow{grid-template-columns:1fr 1fr}}
+.item .acts{display:flex;gap:2px;flex:none}
 
 /* log */
 .logform{display:grid;grid-template-columns:150px minmax(0,1fr) 90px;gap:8px}
@@ -700,12 +704,19 @@ function renderSchedule(){
   document.getElementById('dayItems').innerHTML = (future && items.length ? '<p class="muted small">Coming up. You can tick these off on the day.</p>' : '') + (items.length ? items.map(x => {
     const c = catById(x.cat), isDone = !!doneFor(ds, x.id);
     plan += x.minutes; if (isDone) done += x.minutes;
+    if (editingPlan === x.id) return `<div class="item-edit"><form class="addrow" data-editform="${x.id}">
+      <select name="cat" aria-label="Category">${catOptions(x.cat)}</select>
+      <input name="minutes" type="number" min="5" step="5" value="${x.minutes}" aria-label="Minutes">
+      <input name="label" class="grow" value="${esc(x.label || '')}" placeholder="What (optional)" aria-label="Description">
+      <button class="btn primary" type="submit">Save</button>
+      <button class="btn ghost" type="button" data-editcancel>Cancel</button>
+    </form></div>`;
     return `<label class="item ${isDone ? 'done' : ''}">
       <input type="checkbox" data-tick="${x.id}" ${isDone ? 'checked' : ''} ${future ? 'disabled' : ''}>
       <span class="dot" style="background:${esc(c?.color || '#888')}"></span>
       <span class="what"><strong>${esc(c?.name || 'Removed category')}</strong>${x.label ? ' · ' + esc(x.label) : ''}</span>
       <span class="mins">${x.minutes} min</span>
-      <button class="btn small ${armedPlan === x.id ? 'armed' : 'ghost'}" type="button" data-unplan="${x.id}" aria-label="Remove from plan">${armedPlan === x.id ? 'Remove?' : '✕'}</button>
+      <span class="acts"><button class="btn small ghost" type="button" data-editplan="${x.id}" aria-label="Edit">✎</button><button class="btn small ${armedPlan === x.id ? 'armed' : 'ghost'}" type="button" data-unplan="${x.id}" aria-label="Remove from plan">${armedPlan === x.id ? 'Remove?' : '✕'}</button></span>
     </label>`;
   }).join('') : '<div class="empty">Nothing planned for this day. Add something below, or enjoy the rest day.</div>');
   document.getElementById('dayDone').textContent = done;
@@ -725,7 +736,7 @@ function renderLog(){
 }
 
 // ---- settings
-let armedCat = null, armedReset = false, armedPlan = null;
+let armedCat = null, armedReset = false, armedPlan = null, editingPlan = null;
 // Presets are weekly time (stored as a fifth of it). Defaults: 1 level = 40% of your weekly time, a checkpoint every 10 steps (about monthly), summit at 50.
 // Keep checkpoint rewards in order when the spacing changes (1st reward stays on the 1st checkpoint, and so on).
 function setCheckpointEvery(cp){
@@ -837,6 +848,9 @@ $('prevWeek').addEventListener('click', () => { weekStart = addDays(weekStart, -
 $('nextWeek').addEventListener('click', () => { weekStart = addDays(weekStart, 7); render(); });
 $('days').addEventListener('click', e => { const b = e.target.closest('[data-day]'); if (!b) return; selDay = Number(b.dataset.day); render(); });
 $('dayItems').addEventListener('click', e => {
+  const ed = e.target.closest('[data-editplan]');
+  if (ed){ e.preventDefault(); armedPlan = null; editingPlan = ed.dataset.editplan; render(); const f = document.querySelector('[data-editform] [name=label]'); if (f) f.focus(); return; }
+  if (e.target.closest('[data-editcancel]')){ editingPlan = null; render(); return; }
   const un = e.target.closest('[data-unplan]');
   if (un){
     e.preventDefault();
@@ -844,6 +858,14 @@ $('dayItems').addEventListener('click', e => {
     armedPlan = null; state.schedule[selDay] = state.schedule[selDay].filter(x => x.id !== un.dataset.unplan); save(); render();
   }
 });
+$('dayItems').addEventListener('submit', e => {
+  const f = e.target.closest('[data-editform]'); if (!f) return;
+  e.preventDefault();
+  const x = state.schedule[selDay].find(i => i.id === f.dataset.editform);
+  if (x){ x.cat = f.cat.value || x.cat; x.minutes = Math.max(1, Number(f.minutes.value) || x.minutes); x.label = f.label.value.trim(); }
+  editingPlan = null; save(); render();
+});
+$('dayItems').addEventListener('keydown', e => { if (e.key === 'Escape' && editingPlan){ e.stopPropagation(); editingPlan = null; render(); } });
 $('dayItems').addEventListener('change', e => {
   const id = e.target.dataset.tick; if (!id) return;
   const ds = iso(addDays(weekStart, selDay)), x = state.schedule[selDay].find(i => i.id === id);
