@@ -665,7 +665,7 @@ function renderLog(){
   document.getElementById('logList').innerHTML = rows.length ? rows.map(e => {
     const c = catById(e.cat);
     return `<div class="logrow"><span class="date">${e.date}</span><span class="what"><span class="dot" style="display:inline-block;background:${esc(c?.color || '#888')}"></span> ${esc(c?.name || 'Removed category')}${e.note ? ' · <span class="muted">' + esc(e.note) + '</span>' : ''}${e.sched ? ' <span class="label">from schedule</span>' : ''}</span><span class="num">${e.minutes} min</span><button class="btn small ghost" data-unlog="${e.id}" aria-label="Delete entry">✕</button></div>`;
-  }).join('') + (state.log.length > 60 ? `<p class="muted" style="padding-top:8px">Showing the latest 60 of ${state.log.length} entries.</p>` : '') : '<div class="empty">No time logged yet. Tick something off on the Schedule tab or log it above.</div>';
+  }).join('') + (state.log.length > 60 ? `<p class="muted" style="padding-top:8px">Showing the latest 60 of ${state.log.length} entries.</p>` : '') : '<div class="empty">No time logged yet. Tick something off on the Climb tab or log it above.</div>';
 }
 
 // ---- settings
