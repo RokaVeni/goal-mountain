@@ -414,14 +414,15 @@ function exampleState(){
     const d = addDays(today, -back);
     schedule[weekday(d)].forEach((x,i) => { if ((back + i) % 5 !== 0) s.log.push({id:uid(), date:iso(d), cat:x.cat, minutes:x.minutes, note:x.label, sched:x.id}); });
   }
-  // Two demo sessions on today's list: one tops up a level, the other is big enough to reach the next checkpoint.
+  // Demo sessions on today's list: a level-up, the next checkpoint, and the summit.
   const mins = {}; s.log.forEach(l => mins[l.cat] = (mins[l.cat] || 0) + l.minutes);
   const mpl = s.minutesPerLevel, up = m => Math.ceil(m / 10) * 10;
   const steps = cats.reduce((a, c) => a + Math.floor((mins[c.id] || 0) / mpl), 0);
   const nextCp = (Math.floor(steps / s.goal.checkpointEvery) + 1) * s.goal.checkpointEvery;
   schedule[weekday(today)].push(
     {id:uid(), cat:S, minutes:up(mpl - (mins[S] || 0) % mpl), label:'Demo: tick me to see a level-up', demo:true},
-    {id:uid(), cat:R, minutes:up((nextCp - steps) * mpl), label:'Demo: tick me to reach a checkpoint', demo:true}
+    {id:uid(), cat:R, minutes:up((nextCp - steps) * mpl), label:'Demo: tick me to reach a checkpoint', demo:true},
+    {id:uid(), cat:W, minutes:up((s.goal.steps - steps) * mpl), label:'Demo: tick me to reach the summit', demo:true}
   );
   return s;
 }
